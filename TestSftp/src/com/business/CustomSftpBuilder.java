@@ -18,17 +18,17 @@ import com.transferObject.FileTransferPropertyTO;
  */
 public class CustomSftpBuilder {
 
-	/**
-	 * @param fileTransferTO
-	 * @param fileToDownload
-	 * @return
+	/**This method is designed to download file from remote location to 
+	 * local location using SFTP
+	 * @param fileTransferTO A custom object contains information like serverAddress, userId, password, remoteDirectory, localDirectory etc.
+	 * @param fileToDownload A String Object representing the name of the file which is required to download
+	 * @return A boolean value having variance true or false on success
 	 */
 	public boolean downloadFileUsingSFTP(FileTransferPropertyTO fileTransferPropertyTO, String fileToDownload){
 		boolean success = false;
-		if(StringUtils.isNotBlank(fileToDownload)){
+		if(StringUtils.isNotBlank(fileToDownload) && fileTransferPropertyTO != null && fileTransferPropertyTO.validateFileTransferTO()){
 			StandardFileSystemManager manager = new StandardFileSystemManager();
 			try{
-				validateFileTransferTO(fileTransferPropertyTO);
 				manager.init();
 				FileSystemOptions opts = new FileSystemOptions();
 				setUpSFTP(opts);
@@ -57,17 +57,17 @@ public class CustomSftpBuilder {
 		return success;
 	}
 	
-	/**
-	 * @param fileTransferTO
-	 * @param fileToUpload
-	 * @return
+	/**This method is designed to upload a file from local location to 
+	 * remote location using SFTP
+	 * @param fileTransferTO A custom object contains information like serverAddress, userId, password, remoteDirectory, localDirectory etc.
+	 * @param fileToDownload A String Object representing the name of the file which is required to upload
+	 * @return A boolean value having variance true or false on success
 	 */
 	public boolean uploadFileUsingSFTP(FileTransferPropertyTO fileTransferPropertyTO, String fileToUpload){
 		boolean success = false;
-		if(StringUtils.isNotBlank(fileToUpload)){
+		if(StringUtils.isNotBlank(fileToUpload) && fileTransferPropertyTO != null && fileTransferPropertyTO.validateFileTransferTO()){
 			StandardFileSystemManager manager = new StandardFileSystemManager();
 			try{
-				validateFileTransferTO(fileTransferPropertyTO);
 				//check if the file exists
 				String filepath = new StringBuilder(fileTransferPropertyTO.getLocalDirectory()).append(fileToUpload).toString();
 				File file = new File(filepath);
@@ -102,17 +102,16 @@ public class CustomSftpBuilder {
 		return success;
 	}
 	
-	/**
-	 * @param fileTransferTO
-	 * @param fileToDelete
-	 * @return
+	/**This method is designed to delete a file from remote location 
+	 * @param fileTransferTO A custom object contains information like serverAddress, userId, password, remoteDirectory, localDirectory etc.
+	 * @param fileToDownload A String Object representing the name of the file which is required to delete
+	 * @return A boolean value having variance true or false on success
 	 */
 	public boolean deleteFileUsingSFTP(FileTransferPropertyTO fileTransferPropertyTO, String fileToDelete){
 		boolean success = false;
-		if(StringUtils.isNotBlank(fileToDelete)){
+		if(StringUtils.isNotBlank(fileToDelete) && fileTransferPropertyTO != null && fileTransferPropertyTO.validateFileTransferTO()){
 			StandardFileSystemManager manager = new StandardFileSystemManager();
 			try{
-				validateFileTransferTO(fileTransferPropertyTO);
 				manager.init();
 				//Setup our SFTP configuration
 				FileSystemOptions opts = new FileSystemOptions();
@@ -140,7 +139,7 @@ public class CustomSftpBuilder {
 		return success;
 	}
 	
-	/**
+	/**Th
 	 * @param opts
 	 * @throws Exception
 	 */
@@ -150,29 +149,4 @@ public class CustomSftpBuilder {
 		SftpFileSystemConfigBuilder.getInstance().setTimeout(opts, 10000);
 	}
 	
-	/**
-	 * @param fileTransferTO
-	 * @throws Exception
-	 */
-	private void validateFileTransferTO(FileTransferPropertyTO fileTransferTO) throws Exception{
-		if(fileTransferTO != null){
-			if(StringUtils.isBlank(fileTransferTO.getServerAddress())){
-				throw new Exception("ServerAddress is coming as Null. Please verify");
-			}
-			if(StringUtils.isBlank(fileTransferTO.getUserId())){
-				throw new Exception("UserId is coming as Null. Please verify");
-			}
-			if(StringUtils.isBlank(fileTransferTO.getPassword())){
-				throw new Exception("Password is coming as Null. Please verify");
-			}
-			if(StringUtils.isBlank(fileTransferTO.getLocalDirectory())){
-				throw new Exception("LocalDirectory is coming as Null. Please verify");
-			}
-			if(StringUtils.isBlank(fileTransferTO.getRemoteDirectory())){
-				throw new Exception("RemoteDirectory is coming as Null. Please verify");
-			}
-		}else{
-			throw new Exception("fileTransferTO is coming as Null. Please verify");
-		}
-	}
 }
