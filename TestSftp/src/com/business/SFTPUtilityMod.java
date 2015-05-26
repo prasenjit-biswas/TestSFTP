@@ -28,6 +28,7 @@ public class SFTPUtilityMod {
 	/**This method is designed to download files from a remote location to local over SFTP
 	 * @param fileTransferPropertyTO A custom object contains information like serverAddress, userId, password, remoteDirectory, localDirectory etc.
 	 * @param filePattern A String Object representing file name patter (example file1_*.dat)
+	 * @param retryCount A <code>int</code> value representing the retry count having start index from 1
 	 * @return A boolean value having variance true or false on success
 	 */
 	public boolean downloadFileUsingSFTP(FileTransferPropertyTO fileTransferPropertyTO, String filePattern, int retryCount) {
@@ -47,7 +48,7 @@ public class SFTPUtilityMod {
 					/**
 					 * Verify whether channel is connected or not
 					 * 1. if it is not connected show error
-					 * 2. if it is connected get the files from remote location to local 
+					 * 2. if it is connected then get the files from remote location to local 
 					 */
 					if(!channel.isConnected()){
 						System.out.println("Could not connect to HOST ::"+fileTransferPropertyTO.toString());
@@ -87,11 +88,11 @@ public class SFTPUtilityMod {
 	}  
 	
 	/**This method is designed to download remote file to local. If there is any exception while downloading file then
-	 * this method will try to retry to download the same for a specific retry count. 
+	 * this method will try to retry to download the same for a given retry count. 
 	 * @param fileTransferPropertyTO A custom object contains information like serverAddress, userId, password, remoteDirectory, localDirectory etc.
 	 * @param remoteFileName A String representing the remote server file name
 	 * @param channelSftp jsch.ChannelSftp Object
-	 * @param retryCount A <code>int</code> value representing the retry count 
+	 * @param retryCount A <code>int</code> value representing the retry count having start index from 1
 	 * @throws SftpException
 	 */
 	private void retryDownload(FileTransferPropertyTO fileTransferPropertyTO, String remoteFileName, ChannelSftp channelSftp, int retryCount) throws SftpException{
