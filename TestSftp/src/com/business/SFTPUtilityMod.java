@@ -97,6 +97,9 @@ public class SFTPUtilityMod {
 	private void retryDownload(FileTransferPropertyTO fileTransferPropertyTO, String remoteFileName, ChannelSftp channelSftp, int retryCount) throws SftpException{
 		int count = 1;
 		boolean isDownloaded = false;
+		/**
+		 * Retry to download file from remote for provided retry count
+		 */
 		while(count <= retryCount){
 			try{
 				if(count == 1){
@@ -111,6 +114,10 @@ public class SFTPUtilityMod {
 				count ++;
 			}
 		}
+		/**
+		 * if there is exception while downloading the file after trying for a specific retry count 
+		 * then throw <code>SftpException</code>
+		 */
 		if(!isDownloaded){
 			throw new SftpException(1, "Failed to download file :: "+remoteFileName);
 		}
